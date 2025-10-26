@@ -205,3 +205,12 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Project data artifacts
+config.yaml
+config.local.yaml
+*.log
+
+# Generated CSV outputs (keep samples committed)
+data/**/*.csv
+!data/samples/*.csv
