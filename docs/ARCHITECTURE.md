@@ -37,7 +37,9 @@ want to manage settings through environment variables, consider creating an
 file, rules). For now, copying the example config is sufficient.
 
 ## Developer Commands
-- `python -m src.cli ...` – run the CLI
+- `make setup` – create the virtualenv and install dependencies
+- `make pipeline` – run the four CLI stages (find/parse/classify/export)
+- `python -m src.cli ...` – run an individual CLI command manually
 - `pytest` – not yet configured, add tests as the project evolves
 - `ruff`, `black`, `mypy` – recommended linting/type-checking tools (not bundled)
 

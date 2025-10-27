@@ -64,7 +64,7 @@ def cmd_parse_exports(args: argparse.Namespace) -> None:
     combined = read_csvs(source_dir)
     if combined.empty:
         print(f"No CSVs found in {source_dir}")
-        return
+        raise SystemExit(1)
 
     normalized = normalize_df(combined)
     output_path = Path(args.out)
