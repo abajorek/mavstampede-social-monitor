@@ -6,6 +6,7 @@
 - **PyYAML** for configuration management
 - **Playwright** (optional) helper scripts to open browser sessions that the user
   controls while gathering exports
+- **Flask** web console under `src/webapp` to trigger the pipeline and preview data
 - Lightweight modules under `src/` for parsing, scoring, and exporting data
 
 ## Key Modules
@@ -15,6 +16,7 @@
 - `src/filters/cmu_rules.py` – heuristic scoring for CMU relevance
 - `src/classify/` – sentiment and theme helpers used during classification
 - `src/export/to_csv.py` – basic CSV writer for final export step
+- `src/webapp/` – Flask application with templates and static assets using CMU colors
 
 ## Running Locally
 ```bash
@@ -28,17 +30,24 @@ python -m src.cli find --window 21d --out data/candidates.csv
 python -m src.cli parse-exports --in_dir data/raw --out data/comments_raw.csv
 python -m src.cli classify --in data/comments_raw.csv --out data/comments_classified.csv
 python -m src.cli export --in data/comments_classified.csv --out data/mavstampede_monitor.csv
+
+# Optional Flask console
+export FLASK_APP=src.webapp:create_app
+flask run --port 5001
 ```
 
 ## Environment Variables
-The CLI uses `config.yaml` for the small amount of configuration it needs. If you
-want to manage settings through environment variables, consider creating an
-`.env.example` mirroring the keys in `config.example.yaml` (time window, keyword
-file, rules). For now, copying the example config is sufficient.
+The CLI uses `config.yaml` for core settings. The web console also honors:
+
+- `BOX_FIVE_DATA_DIR` – override the data directory (default `data/`)
+- `BOX_FIVE_SECRET_KEY` – customize the Flask session secret
+
+Consider adding an `.env` file with these values when deploying.
 
 ## Developer Commands
 - `make setup` – create the virtualenv and install dependencies
 - `make pipeline` – run the four CLI stages (find/parse/classify/export)
+- `make gui` – start the Flask console on port 5001
 - `python -m src.cli ...` – run an individual CLI command manually
 - `pytest` – not yet configured, add tests as the project evolves
 - `ruff`, `black`, `mypy` – recommended linting/type-checking tools (not bundled)
@@ -49,3 +58,4 @@ file, rules). For now, copying the example config is sufficient.
 - [ ] Expand heuristics for sentiment and themes
 - [ ] Provide richer logging and error handling across modules
 - [ ] Flesh out Playwright collectors for Instagram and TikTok
+- [ ] Add auth/session helpers for the Flask console
