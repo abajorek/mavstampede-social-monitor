@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}MavStampede Monitor Console{% endblock %}
+{% block content %}
+<section class="panel">
+  <h2>Run the Pipeline</h2>
+  <form method="post" class="pipeline-form">
+    <label for="window">Lookback window</label>
+    <input type="text" id="window" name="window" value="{{ window }}" placeholder="e.g. 21d" />
+    <div class="actions">
+      <button name="action" value="run_pipeline" class="primary">Run full pipeline</button>
+      <button name="action" value="generate">Generate queries</button>
+      <button name="action" value="normalize">Normalize exports</button>
+      <button name="action" value="classify">Classify comments</button>
+      <button name="action" value="export">Export final CSV</button>
+    </div>
+  </form>
+  <p class="hint">Drop your CSV exports into <code>{{ status_cards[1].path.parent }}</code> before normalizing.</p>
+</section>
+
+<section class="panel">
+  <h2>Pipeline Status</h2>
+  <div class="status-grid">
+    {% for card in status_cards %}
+      <div class="status-card {% if card.exists %}ready{% else %}missing{% endif %}">
+        <h3>{{ card.label }}</h3>
+        <p class="path">{{ card.path }}</p>
+        {% if card.exists %}
+          <p class="timestamp">Updated {{ card.mtime.strftime('%Y-%m-%d %H:%M') }}</p>
+        {% else %}
+          <p class="timestamp">Not generated yet</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Configured Rules</h2>
+  {% if rules %}
+    <div class="rules-grid">
+      {% for key, values in rules.get('rules', {}).items() %}
+        <div class="rule-block">
+          <h3>{{ key.replace('_', ' ').title() }}</h3>
+          <ul>
+            {% for value in values %}
+              <li>{{ value }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No config found yet. Copy <code>config.example.yaml</code> to <code>config.yaml</code> and customize.</p>
+  {% endif %}
+</section>
+
+<section class="panel">
+  <h2>Latest Output Preview</h2>
+  {% if final_preview is not none %}
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            {% for col in final_preview.columns %}
+              <th>{{ col }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for _, row in final_preview.iterrows() %}
+            <tr>
+              {% for value in row %}
+                <td>{{ value }}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p>Run the pipeline to generate <code>{{ status_cards[-1].path }}</code>.</p>
+  {% endif %}
+</section>
+{% endblock %}

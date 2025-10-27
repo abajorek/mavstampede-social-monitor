@@ -1,0 +1,27 @@
+time_window: "21d"
+locations:
+  - "Grand Junction, CO"
+keywords_file: "data/samples/search_terms.txt"
+output_dir: "data"
+platforms:
+  - facebook
+  - instagram
+  - tiktok
+rules:
+  positive_terms:
+    - "Colorado Mesa"
+    - "Maverick"
+    - "Mavs"
+    - "@cmubands"
+    - "Grand Junction"
+    - "Mesa State"
+  negative_terms:
+    - "Carnegie Mellon"
+    - "Central Michigan"
+    - "Chippewas"
+    - "Pittsburgh"
+    - "San Diego Mesa College"
+    - "Mesa Community College"
+  neutral_terms:
+    - "CMU band"
+    - "Mesa band"

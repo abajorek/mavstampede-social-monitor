@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}MavStampede Monitor{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-mark">🎺</span>
+        <div>
+          <h1>MavStampede Social Monitor</h1>
+          <p class="tagline">Box-Five Ops Console</p>
+        </div>
+      </div>
+      <nav>
+        <a href="https://www.coloradomesa.edu" target="_blank" rel="noopener">Colorado Mesa University</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-group">
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="app-footer">
+      <p>Configured via {{ config_path }}{% if not has_config %} (missing – copy config.example.yaml){% endif %}</p>
+    </footer>
+  </body>
+</html>
